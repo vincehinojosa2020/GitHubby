@@ -1,8 +1,8 @@
 ## About
 
-Blab-a-Gag is a fairly simple forum type application which allows users to:
-* Post a one-liner joke;
-* Follow the jokes of other users or not; and 
+GitHubby is a fairly simple forum type application which allows users to:
+* Post one-liner Dad-jokes;
+* Follow the Dad-jokes of other users -or not-; and 
 * Comment on other users messages (heckle).
 
 ### URLs
@@ -24,10 +24,6 @@ docker run --rm -it -p 127.0.0.1:8080:8080 antfie/verademo
 ```
 
 Navigate to: http://127.0.0.1:8080.
-
-## Exploitation Demos
-
-See the `docs` folder.
 
 ## Technologies Used
 
