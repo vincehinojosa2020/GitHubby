@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: githubby-service
+spec:
+  type: LoadBalancer # This gives your app an address on the internet
+  selector:
+    app: githubby-app # This points to the app we defined in deployment.yaml
+  ports:
+    - protocol: TCP
+      port: 80 # The outside port people will use
+      targetPort: 8080 # The port your app is running on inside the container
