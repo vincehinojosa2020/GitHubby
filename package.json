@@ -1,0 +1,24 @@
+{
+  "name": "githubby",
+  "version": "1.0.0",
+  "description": "GitHubby is a fairly simple forum type application which allows users to: * Post one-liner Dad-jokes; * Follow the Dad-jokes of other users -or not-; and  * Comment on other users messages (heckle).",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vincehinojosa2020/GitHubby.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vincehinojosa2020/GitHubby/issues"
+  },
+  "homepage": "https://github.com/vincehinojosa2020/GitHubby#readme"
+}
