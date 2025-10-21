@@ -1,8 +1,17 @@
 name: Build and push image
 
+# Triggers: push to main, Opersa repository_dispatch, and manual run in UI
 on:
   push:
     branches: [ main ]
+  repository_dispatch:
+    types: [opersa-run]
+  workflow_dispatch:
+    inputs:
+      pipeline:
+        description: 'Pipeline name (optional)'
+        required: false
+        default: 'build'
 
 permissions:
   contents: read
@@ -32,5 +41,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          file: ./Dockerfile.app
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/githubby:latest
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/githubby:latest
+            ghcr.io/${{ github.repository_owner }}/githubby:${{ github.sha }}
