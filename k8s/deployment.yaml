@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: githubby-app
+  labels:
+    app: githubby
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: githubby
+  template:
+    metadata:
+      labels:
+        app: githubby
+    spec:
+      containers:
+      - name: githubby
+        image: ghcr.io/vincehinojosa2020/githubby:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mariadb://mariadb-svc:3306/blab
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: githubby-svc
+spec:
+  selector:
+    app: githubby
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: ClusterIP
