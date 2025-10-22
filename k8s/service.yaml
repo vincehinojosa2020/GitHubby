@@ -3,10 +3,13 @@ kind: Service
 metadata:
   name: githubby-service
 spec:
-  type: LoadBalancer # This gives your app an address on the internet
+  # NodePort is the easiest way to expose an app for a local demo
+  type: NodePort 
   selector:
-    app: githubby-app # This points to the app we defined in deployment.yaml
+    app: githubby
   ports:
-    - protocol: TCP
-      port: 80 # The outside port people will use
-      targetPort: 8080 # The port your app is running on inside the container
+  - protocol: TCP
+    # This says: "If traffic hits port 30080 on my Mac, send it to port 8080 inside the container"
+    port: 8080
+    targetPort: 8080
+    nodePort: 30080
