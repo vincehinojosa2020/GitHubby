@@ -12,9 +12,11 @@ spec:
       labels:
         app: githubby
     spec:
+      **imagePullSecrets:**
+      **- name: ghcr-creds**
       containers:
       - name: githubby
-        # This is the "image" we will update from our pipeline
-        image: vincehinojosa2020/githubby:latest 
+        # This tag will be updated by Opsera, but it's good to have a real one here now
+        image: ghcr.io/vincehinojosa2020/githubby:18716001368 
         ports:
         - containerPort: 8080
