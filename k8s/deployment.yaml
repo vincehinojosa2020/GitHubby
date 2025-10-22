@@ -17,6 +17,6 @@ spec:
       containers:
       - name: githubby
         # This tag will be updated by Opsera, but it's good to have a real one here now
-        image: ghcr.io/vincehinojosa2020/githubby:18716001368 
+        image: ghcr.io/vincehinojosa2020/githubby:opsera.output.build.github_run_id
         ports:
         - containerPort: 8080
