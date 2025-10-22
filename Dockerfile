@@ -4,7 +4,7 @@
 FROM maven:3.8-jdk-8 as builder
 WORKDIR /build
 COPY pom.xml .
-COPY src ./src
+COPY app/src ./src
 RUN mvn -B clean package -DskipTests
 
 FROM openjdk:8-jre-slim
