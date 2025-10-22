@@ -1,19 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: githubby-app
+  name: githubby-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: githubby-app
+      app: githubby
   template:
     metadata:
       labels:
-        app: githubby-app
+        app: githubby
     spec:
       containers:
-      - name: githubby-container
-        image: your-docker-image-goes-here # Opsera/Argo will fill this in later!
+      - name: githubby
+        # This is the "image" we will update from our pipeline
+        image: vincehinojosa2020/githubby:latest 
         ports:
         - containerPort: 8080
