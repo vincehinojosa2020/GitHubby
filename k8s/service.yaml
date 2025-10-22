@@ -3,13 +3,10 @@ kind: Service
 metadata:
   name: githubby-service
 spec:
-  # NodePort is the easiest way to expose an app for a local demo
-  type: NodePort 
+  # This is the default and simplest type.
+  type: ClusterIP
   selector:
     app: githubby
   ports:
-  - protocol: TCP
-    # This says: "If traffic hits port 30080 on my Mac, send it to port 8080 inside the container"
-    port: 8080
+  - port: 8080
     targetPort: 8080
-    nodePort: 30080
