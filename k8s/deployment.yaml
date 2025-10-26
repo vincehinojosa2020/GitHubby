@@ -1,22 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  # This name is for the Deployment itself
   name: githubby-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
+      # This is the "label" the service will look for
       app: githubby
   template:
     metadata:
       labels:
+        # This is the "label" the service will look for
         app: githubby
     spec:
-      **imagePullSecrets:**
-      **- name: ghcr-creds**
+      # This tells the kitchen to use your "key"
+      imagePullSecrets:
+      - name: ghcr-creds
       containers:
       - name: githubby
-        # This tag will be updated by Opsera, but it's good to have a real one here now
-        image: image: ghcr.io/vincehinojosa2020/githubby:opsera.output.build.github_run_id
+        # We are using a REAL, KNOWN-GOOD image tag from a past build
+        image: ghcr.io/vincehinojosa2020/githubby:18716001368
         ports:
         - containerPort: 8080
