@@ -18,6 +18,6 @@ spec:
       containers:
       - name: githubby
         # We are using a REAL, KNOWN-GOOD image tag from your past build
-        image: ghcr.io/vincehinojosa2020/githubby:18719912223
+        image: ghcr.io/vincehinojosa2020/githubby:opsera.output.build.github_run_id
         ports:
         - containerPort: 8080
