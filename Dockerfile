@@ -12,10 +12,10 @@ FROM eclipse-temurin:11-jre
 WORKDIR /app
 
 #
-# This is the corrected COPY line from our last discussion.
-# It copies the "verademo-0.0.1-SNAPSHOT.jar" that pom.xml builds.
+# THIS IS THE FINAL CORRECTED LINE:
+# It now copies the "githubby-0.0.1-SNAPSHOT.jar" that your pom.xml builds.
 #
-COPY --from=builder /build/app/target/verademo-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --from=builder /build/app/target/githubby-0.0.1-SNAPSHOT.jar /app/app.jar
 
 EXPOSE 8080
 
