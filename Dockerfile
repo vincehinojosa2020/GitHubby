@@ -13,9 +13,9 @@ WORKDIR /app
 
 #
 # THIS IS THE FINAL CORRECTED LINE:
-# It now copies the "githubby-0.0.1-SNAPSHOT.jar" that your pom.xml builds.
+# It now copies the "verademo.jar" that your pom.xml actually builds.
 #
-COPY --from=builder /build/app/target/githubby-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --from=builder /build/app/target/verademo.jar /app/app.jar
 
 EXPOSE 8080
 
