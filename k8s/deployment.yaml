@@ -16,8 +16,6 @@ spec:
       - name: ghcr-creds
       containers:
       - name: githubby
-        # This is a REAL, KNOWN-GOOD image tag from your past build
         image: ghcr.io/vincehinojosa2020/githubby:18719912223
         ports:
         - containerPort: 8080
-    # The Kubernetes worker will now know to pull this file from your private GitHub Container Registry.
