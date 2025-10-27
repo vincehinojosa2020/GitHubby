@@ -16,6 +16,6 @@ spec:
       - name: ghcr-creds
       containers:
       - name: githubby
-        image: ghcr.io/vincehinojosa2020/githubby:build.github_run_id
+        image: ghcr.io/vincehinojosa2020/githubby:18719912223
         ports:
         - containerPort: 8080
