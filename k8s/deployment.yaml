@@ -16,6 +16,6 @@ spec:
       - name: ghcr-creds
       containers:
       - name: githubby
-        image: ghcr.io/vincehinojosa2020/githubby:${68f8b2e44a88d670578a5f68.github_run_id}
+        image: ghcr.io/vincehinojosa2020/githubby:18850826686 # This tag is correct from your last run
         ports:
         - containerPort: 80 # This was 8080, now it's 80
