@@ -9,7 +9,7 @@ RUN mvn -B clean package -DskipTests
 
 FROM openjdk:8-jre-slim
 WORKDIR /app
-# Copy the built jar (adjust path if your build produces a different name)
-COPY --from=builder /build/app/target/*.jar app.jar
+# FIX: Correctly copies the built JAR from the Maven build location
+COPY --from=builder /build/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/app.jar"]
