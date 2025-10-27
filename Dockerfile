@@ -9,8 +9,8 @@ FROM adoptopenjdk:11-jre-hotspot
 WORKDIR /app
 
 #
-# This is the line we are fixing.
-# Your pom.xml builds "verademo-0.0.1-SNAPSHOT.jar".
+# THIS IS THE CORRECTED LINE:
+# It now copies the "verademo-0.0.1-SNAPSHOT.jar" that your pom.xml builds.
 #
 COPY --from=builder /build/app/target/verademo-0.0.1-SNAPSHOT.jar /app/app.jar
 
