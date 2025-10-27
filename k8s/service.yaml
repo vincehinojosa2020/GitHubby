@@ -3,10 +3,9 @@ kind: Service
 metadata:
   name: githubby-service
 spec:
-  # This is the default and simplest type.
   type: ClusterIP
   selector:
     app: githubby
   ports:
   - port: 8080
-    targetPort: 8080
+    targetPort: 80 # This was 8080, now it's 80
