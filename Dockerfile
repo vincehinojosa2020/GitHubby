@@ -1,9 +1,7 @@
 # Build-only image for the Java app (no DB)
 FROM maven:3.8-jdk-8 as builder
 WORKDIR /build
-# FIX: Copy the pom.xml into the builder's root
-COPY app/pom.xml .  
-# FIX: Copy the source code into the builder's app directory
+COPY app/pom.xml . 
 COPY app/src ./src 
 RUN mvn -B clean package -DskipTests
 
