@@ -1,12 +1,12 @@
 # .github/workflows/maven-build-and-scan.yml
-name: Build and Security Scan
+name: Build and Full Project Security Scan
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch: # This allows Opsera to trigger it!
+  workflow_dispatch: # This is the "button" Opsera presses
 
 permissions:
   contents: read
@@ -18,11 +18,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the code
+      # 1. Pull the code from GitHub
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Set up Java
+      # 2. Set up the Java environment
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -30,25 +30,26 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # 3. Build the App (The "Compile" step)
+      # 3. Build the Application
+      # This confirms the code compiles and packages correctly.
       - name: Build with Maven
         run: cd app && mvn -B package --file pom.xml -DskipTests
 
-      # 4. Trivy Scan (The "Security Flex" step)
-      - name: Run Trivy Scan (Filesystem)
+      # 4. Full Project Trivy Scan
+      # 'scan-type: fs' and 'scan-ref: .' ensure the WHOLE project is checked.
+      - name: Run Trivy Scan (Entire Project)
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
-          scan-ref: '.'
+          scan-ref: '.' # The dot means "Scan everything in this folder and subfolders"
           scanners: 'vuln,secret,misconfig,license'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          format: 'table' # Changed to table for better visibility in logs
+          exit-code: '1'   # Fails the pipeline if Critical/High issues are found
           severity: 'CRITICAL,HIGH'
-          exit-code: '1' # Tells Opsera/GitHub to FAIL if issues are found
 
-      # 5. Upload to Security Tab
+      # 5. Optional: Keep the SARIF upload for the Security Tab flex
       - name: Upload Results to GitHub Security Tab
         uses: github/codeql-action/upload-sarif@v3
-        if: always() # Upload results even if the scan found a failure
+        if: always() 
         with:
           sarif_file: 'trivy-results.sarif'
