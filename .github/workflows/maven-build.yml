@@ -1,51 +1,54 @@
-# .github/workflows/maven-build.yml
+# .github/workflows/maven-build-and-scan.yml
+name: Build and Security Scan
 
-name: Java CI Build for GitHubby App
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push events but only for the main branch
   push:
-    branches: [ main ] # Adjust if your main branch is named differently (e.g., master)
-  
-  # Triggers the workflow on pull request events targeted at the main branch
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ] # Adjust if your main branch is named differently
+    branches: [ "main" ]
+  workflow_dispatch: # This allows Opsera to trigger it!
 
-  # Allows the workflow to be triggered manually or via API (e.g., by Opsera)
-  workflow_dispatch: 
+permissions:
+  contents: read
+  security-events: write 
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  pipeline-run:
+    name: Build & Security Pipeline
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Step 1: Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # 1. Checkout the code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up JDK (e.g., version 17 - IMPORTANT: adjust if your project needs a different version like 11!)
-      # This action also caches Maven dependencies for faster builds
+      # 2. Set up Java
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17' 
-          distribution: 'temurin' # Popular Java distribution
+          java-version: '17'
+          distribution: 'temurin'
           cache: maven
 
-      # Step 3: Build with Maven
-      # IMPORTANT: We first change directory to 'app' then run Maven
-      - name: Build with Maven (in app directory)
+      # 3. Build the App (The "Compile" step)
+      - name: Build with Maven
         run: cd app && mvn -B package --file pom.xml -DskipTests
-        # Explanation of mvn command:
-        # cd app          => Change directory to where pom.xml lives
-        # &&              => If cd succeeds, then run the next command
-        # mvn             => Execute maven
-        # -B              => Run in non-interactive (batch) mode - recommended for CI
-        # package         => Compile, test (if not skipped), and package the application
-        # --file pom.xml  => Specify the POM file (good practice within the target dir)
-        # -DskipTests     => Skip running the tests
+
+      # 4. Trivy Scan (The "Security Flex" step)
+      - name: Run Trivy Scan (Filesystem)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln,secret,misconfig,license'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1' # Tells Opsera/GitHub to FAIL if issues are found
+
+      # 5. Upload to Security Tab
+      - name: Upload Results to GitHub Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() # Upload results even if the scan found a failure
+        with:
+          sarif_file: 'trivy-results.sarif'
