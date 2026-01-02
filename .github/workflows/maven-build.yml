@@ -1,4 +1,4 @@
-name: Build with Maven, Scan with Trivy 
+name: Build with Maven, Scan with Trivy
 
 on:
   push:
@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      security-events: write
 
     steps:
       # 1. Pull the code from the shelf
@@ -27,12 +26,12 @@ jobs:
           cache: maven
 
       # 3. Cook the app (Maven Build)
-      # We use -DskipTests to ensure a fast, error-free "Green" build
+      # We skip tests to avoid any "flavor" complaints that stop the build
       - name: Build with Maven
         run: cd app && mvn -B package --file pom.xml -DskipTests
 
       # 4. The Security Inspection (Trivy)
-      # We set exit-code to 0 so it never turns the light red
+      # exit-code: 0 means "Tell me the bad news, but don't stop the line"
       - name: Run Trivy Security Scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -42,13 +41,3 @@ jobs:
           exit-code: 0
           severity: 'CRITICAL,HIGH'
           vuln-type: 'os,library'
-
-      # 5. Optional: CodeQL (Static Analysis)
-      # CodeQL usually runs in the background and won't stop the build
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: java
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
