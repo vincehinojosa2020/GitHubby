@@ -1,0 +1,37 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: # This is the "Manual Start" button for Opsera
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      # Analogy: The chef enters the kitchen and gathers all the ingredients.
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+      # Analogy: We're making sure the oven is preheated to the exact right temperature.
+
+    - name: Build and Compile
+      # This command is the secret sauce. It searches for any pom.xml in your repo.
+      run: |
+        POM_PATH=$(find . -name "pom.xml" | head -n 1)
+        if [ -z "$POM_PATH" ]; then
+          echo "Error: Could not find pom.xml in any directory!"
+          exit 1
+        fi
+        echo "Found POM at: $POM_PATH"
+        mvn -B package --file "$POM_PATH"
+      # Analogy: Instead of guessing where the recipe is, the chef does a quick search of the kitchen first.
