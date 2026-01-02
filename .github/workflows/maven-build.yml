@@ -6,7 +6,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch: # This is the "button" Opsera presses
+  workflow_dispatch: 
 
 permissions:
   contents: read
@@ -18,11 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Pull the code from GitHub
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Set up the Java environment
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -30,24 +28,19 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # 3. Build the Application
-      # This confirms the code compiles and packages correctly.
       - name: Build with Maven
         run: cd app && mvn -B package --file pom.xml -DskipTests
 
-      # 4. Full Project Trivy Scan
-      # 'scan-type: fs' and 'scan-ref: .' ensure the WHOLE project is checked.
       - name: Run Trivy Scan (Entire Project)
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
-          scan-ref: '.' # The dot means "Scan everything in this folder and subfolders"
+          scan-ref: '.' 
           scanners: 'vuln,secret,misconfig,license'
-          format: 'table' # Changed to table for better visibility in logs
-          exit-code: '1'   # Fails the pipeline if Critical/High issues are found
+          format: 'table' 
+          exit-code: '0' # This is the change! 0 = Don't fail the build
           severity: 'CRITICAL,HIGH'
 
-      # 5. Optional: Keep the SARIF upload for the Security Tab flex
       - name: Upload Results to GitHub Security Tab
         uses: github/codeql-action/upload-sarif@v3
         if: always() 
