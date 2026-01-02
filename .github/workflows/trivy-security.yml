@@ -1,0 +1,40 @@
+name: Trivy Security Pipeline
+
+on:
+  # This enables the "Manual" trigger button in the Actions tab
+  workflow_dispatch:
+
+  # This triggers the scan automatically on every push to the main branch
+  push:
+    branches: [ "main" ]
+  
+  # This triggers the scan on any Pull Request
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  security-events: write # Required to upload results to the Security tab
+
+jobs:
+  trivy-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy Scan (All Scanners)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln,secret,misconfig,license'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Results to GitHub Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
