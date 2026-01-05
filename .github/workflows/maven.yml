@@ -25,7 +25,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Run Trivy Full Gambit Scan
+    - name: Run Trivy "Full Gambit" Scan
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'fs'
